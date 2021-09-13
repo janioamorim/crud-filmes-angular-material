@@ -9,12 +9,17 @@
   }
 }
 .mat-card-image {
-  width: auto;
+  width: 182px;
+  height: 268px;
   margin: auto;
   display: block;
+  padding-bottom: 20px;
 }
 .filtro-listagem {
   width: calc(100% - 50px);
+}
+.quebrar-linha {
+  white-space: pre-line;
 }
 
 @media screen and (min-width: 525px) {

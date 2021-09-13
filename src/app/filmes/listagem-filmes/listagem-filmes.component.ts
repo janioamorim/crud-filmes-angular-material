@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FilmesService } from 'src/app/core/filmes.service';
 import { ConfigParams } from 'src/app/shared/models/config-params';
 import { Filme } from 'src/app/shared/models/filme';
+import { debounceTime } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'dio-listagem-filmes',
@@ -10,6 +12,9 @@ import { Filme } from 'src/app/shared/models/filme';
   styleUrls: ['./listagem-filmes.component.scss']
 })
 export class ListagemFilmesComponent implements OnInit {
+
+  readonly semFoto = 'https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg'
+
 
  config: ConfigParams = {
    pagina: 0,
@@ -19,7 +24,7 @@ export class ListagemFilmesComponent implements OnInit {
   filtroListagem:  FormGroup;
   generos: Array<string>;
 
-  constructor(private filmeService: FilmesService, private fb: FormBuilder) { }
+  constructor(private filmeService: FilmesService, private fb: FormBuilder, private router: Router) { }
 
 
   ngOnInit(): void {
@@ -28,7 +33,9 @@ export class ListagemFilmesComponent implements OnInit {
       genero: ['']
     });
 
-    this.filtroListagem.get('texto').valueChanges.subscribe((val: string) => {
+    this.filtroListagem.get('texto').valueChanges
+    .pipe(debounceTime(400))
+    .subscribe((val: string) => {
      this.config.pesquisa = val;
      this.resetarConsulta();
       
@@ -45,6 +52,10 @@ export class ListagemFilmesComponent implements OnInit {
 
   onScroll(): void{     
     this.listarFIlmes();
+  }
+
+  abrir(id: number): void{
+    this.router.navigateByUrl('/filmes/' + id)
   }
   
   private listarFIlmes(): void{
